@@ -1,0 +1,22 @@
+/* Links globales */
+a, a:visited, a:active {
+  text-decoration: none;          /* quita el subrayado */
+  color: #2F7D5C;                 /* color consistente (verde AdoptaRD) */
+}
+
+a:hover {
+  text-decoration: none;
+  opacity: .85;                   /* feedback en hover */
+}
+
+/* Accesibilidad: indicar foco para teclado */
+a:focus-visible {
+  outline: 2px solid #2F7D5C;
+  outline-offset: 2px;
+}
+
+/* Menú principal (si quieres asegurar el color) */
+nav.menu a { color:#2F7D5C; }
+
+/* Si tienes enlaces dentro de textos (párrafos) y los quieres gris/negro: */
+/* p a { color:#0f172a; }  <- opcional */

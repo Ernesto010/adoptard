@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AdoptaRD — Donaciones</title>
+<style>
+  :root{--primary:#2F7D5C;--bg:#F6F7F9;--text:#111;--muted:#555}
+  *{box-sizing:border-box} 
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  a{text-decoration:none;color:inherit}
+  .nav{display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:1px solid #e7e7e7;padding:14px 24px;margin-bottom:24px;position:sticky;top:0;z-index:10}
+  .brand{color:var(--primary);font-weight:800;font-size:20px}
+  .nav nav{display:flex;gap:16px;color:var(--muted)}
+  .nav nav a:hover{color:var(--primary)}
+  .right-actions{display:flex;gap:10px;align-items:center}
+  .btn-link{padding:8px 12px;border-radius:10px;font-weight:600;font-size:14px;border:1px solid #e7e7e7;background:#fff;cursor:pointer}
+  .btn{background:var(--primary);color:#fff;border:0;padding:10px 20px;border-radius:10px;font-weight:600;cursor:pointer;transition:opacity 0.2s;font-size:14px}
+  .btn:hover{opacity:0.9}
+  .wrap{max-width:1200px;margin:auto;padding:24px}
+  h1{margin:0 0 8px 0;font-size:32px}
+  .subtitle{color:var(--muted);font-size:14px;margin-bottom:24px;line-height:1.6}
+  .hero{background:linear-gradient(135deg, #e8f5f1 0%, #d4edda 100%);border:1px solid #b8e6d5;border-radius:16px;padding:28px;margin-bottom:24px;text-align:center}
+  .hero h2{margin:0 0 10px 0;color:var(--primary);font-size:24px}
+  .hero p{margin:0;color:var(--text);max-width:600px;margin:0 auto}
+  .filter-bar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+  .filter-bar input{flex:1;min-width:250px;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px}
+  .filter-bar input:focus{outline:2px solid var(--primary);border-color:var(--primary)}
+  .filter-bar select{padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
+  .card{background:#fff;border:1px solid #eee;border-radius:16px;padding:20px;display:flex;justify-content:space-between;align-items:center;transition:box-shadow 0.2s,transform 0.2s}
+  .card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.08);transform:translateY(-2px)}
+  .card-info h3{margin:0 0 6px 0;font-size:18px;display:flex;align-items:center;gap:8px}
+  .card-info .meta{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .verified{color:#28a745;font-weight:600;font-size:12px}
+  .donation-modal{background:#fff;border:1px solid #eee;border-radius:16px;padding:24px;margin-top:24px;display:none}
+  .donation-modal.active{display:block}
+  .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:16px;border-bottom:2px solid #e7e7e7}
+  .modal-header h3{margin:0;font-size:20px}
+  .close-btn{background:none;border:0;font-size:24px;cursor:pointer;color:var(--muted);padding:0;width:32px;height:32px;border-radius:6px;transition:background 0.2s}
+  .close-btn:hover{background:#f0f0f0}
+  .modal-content{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .bank-info{background:#f8f9fa;padding:18px;border-radius:12px;border:1px solid #e9ecef}
+  .bank-info h4{margin:0 0 14px 0;font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase}
+  .bank-details{font-family:monospace;font-size:13px;line-height:1.8;background:#fff;padding:14px;border-radius:8px;border:1px solid #e7e7e7}
+  .form-group{margin-bottom:16px}
+  .form-group label{display:block;margin-bottom:6px;font-weight:600;font-size:14px}
+  .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-family:inherit;font-size:14px}
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:2px solid var(--primary);border-color:var(--primary)}
+  .form-group .helper{font-size:12px;color:var(--muted);margin-top:4px}
+  .file-upload{border:2px dashed #ddd;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s}
+  .file-upload:hover{border-color:var(--primary);background:#f8f9fa}
+  .file-upload input{display:none}
+  .file-name{margin-top:8px;font-size:13px;color:var(--primary);font-weight:600}
+  .impact-section{background:#fff;border:1px solid #eee;border-radius:16px;padding:24px;margin-top:24px}
+  .impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+  .impact-card{text-align:center;padding:20px;background:#f8f9fa;border-radius:12px}
+  .impact-icon{font-size:48px;margin-bottom:12px}
+  .impact-card h4{margin:0 0 6px 0;color:var(--primary);font-size:24px;font-weight:700}
+  .impact-card p{margin:0;font-size:13px;color:var(--muted)}
+  @media (max-width:900px){
+    .grid{grid-template-columns:1fr}
+    .modal-content{grid-template-columns:1fr}
+    .impact-grid{grid-template-columns:1fr}
+    .nav nav{display:none}
+  }
+</style>
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="index.html">🐾 AdoptaRD</a>
+    <nav aria-label="Principal">
+      <a href="index.html">Inicio</a>
+      <a href="catalogo.html">Catálogo</a>
+      <a href="refugio.html">Refugios</a>
+      <a href="donaciones.html" style="color:var(--primary);font-weight:700">Donar</a>
+    </nav>
+    <div class="right-actions">
+      <!-- Botón derecho dinámico según rol -->
+      <a id="primaryAction" class="btn" href="login.html">Ingresar</a>
+      <button id="logoutBtn" class="btn-link" style="display:none">Salir</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="hero">
+      <h2>💚 Tu apoyo transforma vidas</h2>
+      <p>Cada donación ayuda a rescatar, alimentar y cuidar animales en necesidad. Selecciona un refugio y contribuye directamente a su misión.</p>
+    </div>
+
+    <h1>Apoya a un refugio</h1>
+    <p class="subtitle">Todos los refugios listados están verificados. Tu donación llega directamente a ellos.</p>
+    
+    <div class="filter-bar">
+      <input type="search" placeholder="Buscar refugio por nombre..."/>
+      <select>
+        <option>Todas las provincias</option>
+        <option>Santo Domingo</option>
+        <option>Santiago</option>
+        <option>La Vega</option>
+        <option>San Cristóbal</option>
+        <option>Puerto Plata</option>
+      </select>
+      <select>
+        <option>Ordenar por: Nombre</option>
+        <option>Más reciente</option>
+        <option>Más antiguo</option>
+      </select>
+    </div>
+
+    <section class="grid">
+      <article class="card">
+        <div class="card-info">
+          <h3>
+            Huellitas RD
+            <span class="verified">✓</span>
+          </h3>
+          <div class="meta">
+            <span>📍 Santo Domingo</span>
+            <span>•</span>
+            <span>24 animales</span>
+            <span>•</span>
+            <span>127 adopciones</span>
+          </div>
+        </div>
+        <button class="btn" onclick="openDonationModal('Huellitas RD', 'Santo Domingo', 'Banco Popular', '000-0000000-1', 'Fundación Huellitas RD')">Donar</button>
+      </article>
+
+      <article class="card">
+        <div class="card-info">
+          <h3>
+            PADELA RD
+            <span class="verified">✓</span>
+          </h3>
+          <div class="meta">
+            <span>📍 Santiago</span>
+            <span>•</span>
+            <span>18 animales</span>
+            <span>•</span>
+            <span>95 adopciones</span>
+          </div>
+        </div>
+        <button class="btn" onclick="openDonationModal('PADELA RD', 'Santiago', 'Banreservas', '000-0000000-2', 'Fundación PADELA')">Donar</button>
+      </article>
+
+      <article class="card">
+        <div class="card-info">
+          <h3>
+            Amigos Peludos
+            <span class="verified">✓</span>
+          </h3>
+          <div class="meta">
+            <span>📍 La Vega</span>
+            <span>•</span>
+            <span>15 animales</span>
+            <span>•</span>
+            <span>68 adopciones</span>
+          </div>
+        </div>
+        <button class="btn" onclick="openDonationModal('Amigos Peludos', 'La Vega', 'BHD León', '000-0000000-3', 'Asociación Amigos Peludos')">Donar</button>
+      </article>
+
+      <article class="card">
+        <div class="card-info">
+          <h3>
+            Patitas Felices
+            <span class="verified">✓</span>
+          </h3>
+          <div class="meta">
+            <span>📍 San Cristóbal</span>
+            <span>•</span>
+            <span>12 animales</span>
+            <span>•</span>
+            <span>42 adopciones</span>
+          </div>
+        </div>
+        <button class="btn" onclick="openDonationModal('Patitas Felices', 'San Cristóbal', 'Banco Popular', '000-0000000-4', 'ONG Patitas Felices')">Donar</button>
+      </article>
+    </section>
+
+    <section class="donation-modal" id="donationModal">
+      <div class="modal-header">
+        <h3>Donar a <span id="refugeName"></span></h3>
+        <button class="close-btn" onclick="closeDonationModal()">×</button>
+      </div>
+      
+      <div class="modal-content">
+        <div>
+          <div class="bank-info">
+            <h4>📋 Información bancaria</h4>
+            <div class="bank-details">
+              <strong>Banco:</strong> <span id="bankName"></span><br/>
+              <strong>Cuenta:</strong> <span id="accountNumber"></span><br/>
+              <strong>Titular:</strong> <span id="accountHolder"></span><br/>
+              <br/>
+              <strong>Pago móvil:</strong><br/>
+              (809) 000-0000
+            </div>
+          </div>
+          
+          <div style="margin-top:16px;padding:14px;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;font-size:13px">
+            <strong>⚠️ Importante:</strong> Después de realizar tu transferencia, completa el formulario para que el refugio pueda verificar tu donación.
+          </div>
+        </div>
+
+        <form onsubmit="submitDonation(event)">
+          <div class="form-group">
+            <label for="donorName">Tu nombre completo *</label>
+            <input type="text" id="donorName" required placeholder="Juan Pérez"/>
+          </div>
+
+          <div class="form-group">
+            <label for="donorEmail">Correo electrónico *</label>
+            <input type="email" id="donorEmail" required placeholder="tu@email.com"/>
+            <div class="helper">Recibirás confirmación aquí</div>
+          </div>
+
+          <div class="form-group">
+            <label for="amount">Monto donado (RD$) *</label>
+            <input type="number" id="amount" required min="100" placeholder="1000"/>
+          </div>
+
+          <div class="form-group">
+            <label for="reference">Referencia de transacción *</label>
+            <input type="text" id="reference" required placeholder="TRX-123456"/>
+            <div class="helper">Número que aparece en tu comprobante</div>
+          </div>
+
+          <div class="form-group">
+            <label for="donationDate">Fecha de transferencia *</label>
+            <input type="date" id="donationDate" required/>
+          </div>
+
+          <div class="form-group">
+            <label>Comprobante de pago (opcional)</label>
+            <label class="file-upload" for="fileInput">
+              <div style="font-size:32px;margin-bottom:8px">📎</div>
+              <div>Click para subir archivo</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:4px">JPG, PNG o PDF (máx. 5MB)</div>
+              <div class="file-name" id="fileName"></div>
+            </label>
+            <input type="file" id="fileInput" accept="image/*,.pdf" onchange="showFileName(this)"/>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Mensaje al refugio (opcional)</label>
+            <textarea id="message" rows="3" placeholder="Escribe un mensaje de apoyo..."></textarea>
+          </div>
+
+          <button type="submit" class="btn" style="width:100%;padding:12px">Enviar comprobante de donación</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="impact-section">
+      <h2 style="margin:0 0 8px 0">El impacto de tu donación</h2>
+      <p style="color:var(--muted);margin:0 0 20px 0">Con tu apoyo, los refugios pueden continuar su importante labor</p>
+      
+      <div class="impact-grid">
+        <div class="impact-card">
+          <div class="impact-icon">🏥</div>
+          <h4>RD$ 500</h4>
+          <p>Vacunas y desparasitación para 1 animal</p>
+        </div>
+        <div class="impact-card">
+          <div class="impact-icon">🍖</div>
+          <h4>RD$ 1,500</h4>
+          <p>Alimentación por 1 mes para 3 animales</p>
+        </div>
+        <div class="impact-card">
+          <div class="impact-icon">✂️</div>
+          <h4>RD$ 3,000</h4>
+          <p>Esterilización completa de 1 animal</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Auth y lógica de UI -->
+  <script src="auth.js"></script>
+  <script>
+    // Ajuste del botón derecho según el rol almacenado
+    (function setupPrimaryAction(){
+      const role = (localStorage.getItem('userRole') || 'visitante').toLowerCase();
+      const btn = document.getElementById('primaryAction');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      if (role === 'refugio') {
+        btn.textContent = 'Panel Refugio';
+        btn.href = 'panel-refugio.html';
+        logoutBtn.style.display = 'inline-block';
+      } else if (role === 'admin') {
+        btn.textContent = 'Panel Admin';
+        btn.href = 'panel-admin.html';
+        logoutBtn.style.display = 'inline-block';
+      } else {
+        // visitante
+        btn.textContent = 'Ingresar';
+        btn.href = 'login.html?next=donaciones.html';
+        logoutBtn.style.display = 'none';
+      }
+
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userEmail');
+        location.href = 'index.html';
+      });
+    })();
+
+    let currentRefuge = '';
+
+    function openDonationModal(name, location, bank, account, holder) {
+      currentRefuge = name;
+      document.getElementById('refugeName').textContent = name;
+      document.getElementById('bankName').textContent = bank;
+      document.getElementById('accountNumber').textContent = account;
+      document.getElementById('accountHolder').textContent = holder;
+      document.getElementById('donationModal').classList.add('active');
+      window.scrollTo({ top: document.getElementById('donationModal').offsetTop - 20, behavior: 'smooth' });
+    }
+
+    function closeDonationModal() {
+      document.getElementById('donationModal').classList.remove('active');
+      const form = document.getElementById('donationModal').querySelector('form');
+      if (form) form.reset();
+      document.getElementById('fileName').textContent = '';
+    }
+
+    function showFileName(input) {
+      const fileName = input.files && input.files[0] ? input.files[0].name : '';
+      document.getElementById('fileName').textContent = fileName ? `✓ ${fileName}` : '';
+    }
+
+    function submitDonation(event) {
+      event.preventDefault();
+      const name = document.getElementById('donorName').value.trim();
+      const email = document.getElementById('donorEmail').value.trim();
+      const amount = document.getElementById('amount').value.trim();
+      const reference = document.getElementById('reference').value.trim();
+      const date = document.getElementById('donationDate').value;
+
+      if (!name || !email || !amount || !reference || !date) {
+        alert('Por favor, completa los campos requeridos.');
+        return;
+      }
+
+      alert(`✓ ¡Gracias ${name}!\n\nTu donación de RD$ ${amount} a ${currentRefuge} ha sido registrada.\nReferencia: ${reference}\nFecha: ${date}\n\nEl refugio verificará tu donación y recibirás confirmación por email.`);
+      closeDonationModal();
+    }
+  </script>
+</body>
+</html>

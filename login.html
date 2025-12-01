@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AdoptaRD — Ingresar</title>
+<style>
+  :root{--primary:#2F7D5C;--bg:#F6F7F9;--text:#111;--muted:#555}
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;
+    background:var(--bg);color:var(--text);min-height:100vh;
+    display:flex;align-items:center;justify-content:center
+  }
+  a{color:var(--primary);font-weight:600;text-decoration:none}
+  a:hover{text-decoration:none;opacity:.9}
+  .container{max-width:480px;width:100%;padding:24px}
+  .logo-section{text-align:center;margin-bottom:28px}
+  .logo{font-size:48px;margin-bottom:6px}
+  .brand{font-size:32px;font-weight:800;color:var(--primary);margin:0}
+  .tagline{color:var(--muted);font-size:14px;margin:6px 0 0 0}
+  .card{
+    background:#fff;border:1px solid #e7e7e7;border-radius:16px;
+    padding:24px;box-shadow:0 2px 8px rgba(0,0,0,0.04);margin-bottom:12px
+  }
+  .card h2{margin:0 0 6px 0;font-size:22px;text-align:center}
+  .card .subtitle{text-align:center;color:var(--muted);font-size:14px;margin:0 0 18px 0}
+  .form-group{margin-bottom:14px}
+  .form-group label{display:block;margin-bottom:6px;font-weight:600;font-size:14px;color:var(--text)}
+  .form-group input{
+    width:100%;padding:12px 14px;border:1px solid #ddd;border-radius:10px;
+    font-family:inherit;font-size:14px;transition:border-color 0.2s,box-shadow 0.2s
+  }
+  .form-group input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(47,125,92,0.1)}
+  .checkbox-group{display:flex;align-items:center;gap:8px;margin:12px 0}
+  .checkbox-group input[type="checkbox"]{width:auto;margin:0}
+  .checkbox-group label{margin:0;font-weight:normal;font-size:14px;cursor:pointer}
+  .btn{
+    width:100%;background:var(--primary);color:#fff;border:0;padding:12px;border-radius:10px;
+    font-weight:600;font-size:15px;cursor:pointer;transition:opacity 0.2s;margin-top:6px
+  }
+  .btn:hover{opacity:0.9}
+  .btn:active{transform:translateY(1px)}
+  .alert{padding:10px 12px;border-radius:8px;margin-bottom:12px;font-size:13px;display:none}
+  .alert.error{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+  .back-link{display:inline-flex;align-items:center;gap:6px;color:var(--muted);margin-bottom:16px;font-size:14px}
+  .back-link:hover{color:var(--primary)}
+  /* Cuentas demo */
+  .demo{display:grid;gap:8px}
+  .demo h3{margin:0 0 6px 0;font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  .demo-row{
+    display:flex;justify-content:space-between;align-items:center;
+    background:#f8f9fa;border:1px solid #e7e7e7;border-radius:10px;padding:10px 12px;gap:10px
+  }
+  .demo-cred{font-family:monospace;font-size:12px;color:#333}
+  .demo button{
+    background:#e9f3ef;color:#155724;border:1px solid #c3e6cb;
+    padding:8px 10px;border-radius:8px;font-weight:700;font-size:12px;cursor:pointer
+  }
+  .demo button:hover{opacity:.95}
+  @media (max-width:500px){.container{padding:16px}.card{padding:20px}}
+</style>
+</head>
+<body>
+  <main class="container">
+    <a href="index.html" class="back-link">← Volver al inicio</a>
+    
+    <div class="logo-section">
+      <div class="logo">🐾</div>
+      <h1 class="brand">AdoptaRD</h1>
+      <p class="tagline">Plataforma de adopción responsable</p>
+    </div>
+    
+    <!-- Formulario -->
+    <section class="card">
+      <h2>Bienvenido de vuelta</h2>
+      <p class="subtitle">Ingresa a tu cuenta para continuar</p>
+      
+      <div class="alert error" id="errorAlert">⚠️ Credenciales incorrectas</div>
+
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" required placeholder="tucorreo@ejemplo.com" autocomplete="email"/>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password" minlength="6"/>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="remember"/>
+          <label for="remember">Recordarme</label>
+        </div>
+
+        <button type="submit" class="btn">Ingresar</button>
+      </form>
+
+      <div style="text-align:center;margin-top:10px">
+        <a href="#" onclick="recover();return false;">¿Olvidaste tu contraseña?</a>
+      </div>
+    </section>
+
+    <!-- Cuentas demo con autocompletar -->
+    <section class="card">
+      <div class="demo">
+        <h3>Cuentas demo</h3>
+
+        <div class="demo-row">
+          <div>
+            <div style="font-weight:700">Administrador</div>
+            <div class="demo-cred">admin@adoptard.com / admin123</div>
+          </div>
+          <button onclick="fillDemo('admin@adoptard.com','admin123')">Autocompletar</button>
+        </div>
+
+        <div class="demo-row">
+          <div>
+            <div style="font-weight:700">Refugio</div>
+            <div class="demo-cred">refugio@huellitas.org / refugio123</div>
+          </div>
+          <button onclick="fillDemo('refugio@huellitas.org','refugio123')">Autocompletar</button>
+        </div>
+
+        
+      </div>
+    </section>
+
+    <div style="text-align:center;margin-top:8px;font-size:13px;color:var(--muted)">
+      <a href="#" style="color:var(--muted)">Privacidad</a> · 
+      <a href="#" style="color:var(--muted)">Términos</a> · 
+      <a href="#" style="color:var(--muted)">Ayuda</a>
+    </div>
+  </main>
+
+  <script src="auth.js"></script>
+  <script>
+    // Lee ?next=destino.html para redirigir tras login
+    function getNext() {
+      const params = new URLSearchParams(location.search);
+      const next = params.get('next');
+      return next && !next.startsWith('http') ? next : null;
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorAlert = document.getElementById('errorAlert');
+
+      let role = null;
+      if (email === 'admin@adoptard.com' && password === 'admin123') {
+        role = 'admin';
+      } else if (email === 'refugio@huellitas.org' && password === 'refugio123') {
+        role = 'refugio';
+      } else if (password.length >= 6) {
+        role = 'visitante';
+      }
+
+      if (!role) {
+        errorAlert.style.display = 'block';
+        return;
+      }
+
+      localStorage.setItem('userEmail', email);
+      localStorage.setItem('userRole', role);
+
+      const next = getNext();
+      if (role === 'admin') {
+        location.href = next || 'panel-admin.html';
+      } else if (role === 'refugio') {
+        location.href = next || 'panel-refugio.html';
+      } else {
+        location.href = next || 'index.html';
+      }
+    }
+
+    function fillDemo(email, pass){
+      document.getElementById('email').value = email;
+      document.getElementById('password').value = pass;
+      document.getElementById('errorAlert').style.display = 'none';
+    }
+
+    function recover(){
+      alert('Demo: enlace de recuperación enviado si el correo existe.');
+    }
+
+    // Oculta el error al escribir
+    ['email','password'].forEach(id=>{
+      document.getElementById(id).addEventListener('input',()=>{
+        document.getElementById('errorAlert').style.display='none';
+      });
+    });
+  </script>
+</body>
+</html>

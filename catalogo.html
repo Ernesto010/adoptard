@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>AdoptaRD — Catálogo</title>
+
+  <!-- estilos globales (quita subrayado de links, etc.) -->
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    :root{--primary:#2F7D5C;--bg:#F6F7F9;--text:#F6F7F9;--muted:#444}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:1200px;margin:auto;padding:24px}
+
+    /* NAV */
+    .nav{display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:1px solid #e7e7e7;padding:14px 24px;position:sticky;top:0;z-index:100}
+    .brand{color:var(--primary);font-weight:800;font-size:20px;text-decoration:none}
+    .nav nav.menu{display:flex;gap:16px;color:var(--muted)}
+    .nav nav.menu a:hover{color:var(--primary)}
+
+    h1{margin:20px 0 10px 0;font-size:32px}
+    .layout{display:grid;grid-template-columns:280px 1fr;gap:18px;margin-top:18px}
+    .panel{background:#fff;border:1px solid #eee;border-radius:16px;padding:16px;height:fit-content;position:sticky;top:80px}
+
+    .filter h3{margin:0 0 12px 0;font-size:16px}
+    .filter label{display:block;margin:12px 0 6px;font-size:14px;font-weight:500}
+    .filter input[type="number"],.filter input[type="text"],.filter select{width:100%;padding:10px;border:1px solid #ddd;border-radius:10px;font-size:14px}
+    .filter input[type="number"]:focus,.filter select:focus{outline:2px solid var(--primary);border-color:var(--primary)}
+    .filter input[type="checkbox"]{margin-right:8px;width:auto}
+    .filter label:has(input[type="checkbox"]){display:flex;align-items:center;cursor:pointer}
+
+    .btn{background:var(--primary);color:#fff;border:0;padding:10px 14px;border-radius:10px;margin-top:10px;cursor:pointer;font-weight:600;font-size:14px;transition:opacity .2s;display:inline-block}
+    .btn:hover{opacity:.9}
+
+    .results-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .results-count{color:var(--muted);font-size:14px}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .card{background:#fff;border:1px solid #eee;border-radius:16px;overflow:hidden;transition:box-shadow .2s,transform .2s}
+    .card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08);transform:translateY(-2px)}
+    .img{aspect-ratio:4/3;background:linear-gradient(135deg,#dfe6eb 0%,#c5d4e0 100%);display:flex;align-items:center;justify-content:center;font-size:64px}
+    .pad{padding:14px}
+    .pad h3{margin:0 0 6px 0;font-size:18px}
+    .muted{color:var(--muted);font-size:14px}
+    .tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+    .chip{background:#eef1f4;border:1px solid #e1e6ea;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:500}
+
+    @media (max-width:960px){
+      .layout{grid-template-columns:1fr}
+      .panel{position:static}
+      .grid{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:640px){
+      .grid{grid-template-columns:1fr}
+      .nav nav.menu{display:none}
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <a class="brand" href="index.html">🐾 AdoptaRD</a>
+    <nav class="menu" aria-label="Principal">
+      <a href="index.html">Inicio</a>
+      <a href="catalogo.html">Adopta</a>
+      <a href="refugio.html">Refugios</a>
+      <a href="donaciones.html">Donar</a>
+      <a href="panel-refugio.html">Panel Refugio</a>
+      <a href="panel-admin.html">Panel Admin</a>
+    </nav>
+    <a id="primaryAction" class="btn" href="login.html">Ingresar</a>
+  </header>
+
+  <main class="wrap">
+    <h1>Catálogo de Adopción</h1>
+
+    <div class="layout">
+      <!-- FILTROS -->
+      <aside class="panel filter" aria-label="Filtros">
+        <h3>Filtros</h3>
+
+        <label for="f-esp">Especie</label>
+        <select id="f-esp">
+          <option value="">Todas</option>
+          <option>Perro</option>
+          <option>Gato</option>
+          <option>Conejo</option>
+          <option>Otros</option>
+        </select>
+
+        <label for="f-tam">Tamaño</label>
+        <select id="f-tam">
+          <option value="">Todos</option>
+          <option>Pequeño</option>
+          <option>Mediano</option>
+          <option>Grande</option>
+        </select>
+
+        <label for="f-edad">Edad (años)</label>
+        <input id="f-edad" type="number" min="0" max="20" placeholder="Ej: 2"/>
+
+        <label for="f-prov">Provincia</label>
+        <select id="f-prov">
+          <option value="">Todas</option>
+          <option>Santo Domingo</option>
+          <option>Santiago</option>
+          <option>La Vega</option>
+          <option>San Cristóbal</option>
+          <option>Puerto Plata</option>
+          <option>San Pedro de Macorís</option>
+        </select>
+
+        <label><input id="f-vac" type="checkbox"/> Vacunado</label>
+        <label><input id="f-est" type="checkbox"/> Esterilizado</label>
+        <label><input id="f-des" type="checkbox"/> Desparasitado</label>
+
+        <button class="btn" id="btn-filters">Aplicar filtros</button>
+      </aside>
+
+      <!-- RESULTADOS -->
+      <div>
+        <div class="results-header">
+          <div class="results-count" id="count">Mostrando 9 resultados</div>
+        </div>
+
+        <section class="grid" id="grid" aria-label="Resultados"></section>
+      </div>
+    </div>
+  </main>
+
+  <!-- auth + comportamiento -->
+  <script src="auth.js"></script>
+  <script>
+    initAuthUI();
+
+    // Datos demo
+    const data = [
+      {id:'luna',  nombre:'Luna',  especie:'Perro',  provincia:'Santo Domingo', tam:'Mediano', edad:2,  vacunado:true,  esterilizado:true, desparasitado:false, icon:'🐕'},
+      {id:'milo',  nombre:'Milo',  especie:'Gato',   provincia:'Santiago',       tam:'Pequeño', edad:1,  vacunado:true,  esterilizado:false, desparasitado:false, icon:'🐈'},
+      {id:'nina',  nombre:'Nina',  especie:'Perro',  provincia:'La Vega',        tam:'Pequeño', edad:3,  vacunado:false, esterilizado:true,  desparasitado:true,  icon:'🐕'},
+      {id:'max',   nombre:'Max',   especie:'Perro',  provincia:'Santo Domingo',  tam:'Grande',  edad:4,  vacunado:true,  esterilizado:false, desparasitado:false, icon:'🐕'},
+      {id:'bella', nombre:'Bella', especie:'Gato',   provincia:'San Cristóbal',  tam:'Mediano', edad:2,  vacunado:false, esterilizado:true,  desparasitado:false, icon:'🐈'},
+      {id:'rocky', nombre:'Rocky', especie:'Perro',  provincia:'Puerto Plata',   tam:'Grande',  edad:5,  vacunado:true,  esterilizado:true,  desparasitado:false, icon:'🐕'},
+      {id:'coco',  nombre:'Coco',  especie:'Conejo', provincia:'Santiago',       tam:'Pequeño', edad:1,  vacunado:false, esterilizado:false, desparasitado:true,  icon:'🐰'},
+      {id:'simba', nombre:'Simba', especie:'Gato',   provincia:'Santo Domingo',  tam:'Mediano', edad:3,  vacunado:true,  esterilizado:true,  desparasitado:false, icon:'🐈'},
+      {id:'lola',  nombre:'Lola',  especie:'Perro',  provincia:'La Vega',        tam:'Pequeño', edad:2,  vacunado:true,  esterilizado:false, desparasitado:false, icon:'🐕'}
+    ];
+
+    const grid = document.getElementById('grid');
+    const count = document.getElementById('count');
+
+    function render(list){
+      grid.innerHTML = list.map(a => `
+        <article class="card">
+          <div class="img">${a.icon}</div>
+          <div class="pad">
+            <h3>${a.nombre}</h3>
+            <div class="muted">${a.especie} · ${a.provincia}</div>
+            <div class="tags">
+              ${a.vacunado ? '<span class="chip">Vacunado</span>' : ''}
+              ${a.esterilizado ? '<span class="chip">Esterilizado</span>' : ''}
+              ${a.desparasitado ? '<span class="chip">Desparasitado</span>' : ''}
+            </div>
+            <a class="btn" href="ficha.html?id=${encodeURIComponent(a.id)}" style="margin-top:10px">Ver ficha</a>
+          </div>
+        </article>
+      `).join('');
+      count.textContent = `Mostrando ${list.length} resultado${list.length===1?'':'s'}`;
+    }
+
+    function applyFilters(){
+      const esp = document.getElementById('f-esp').value;
+      const tam = document.getElementById('f-tam').value;
+      const edad = document.getElementById('f-edad').value;
+      const prov = document.getElementById('f-prov').value;
+      const vac = document.getElementById('f-vac').checked;
+      const est = document.getElementById('f-est').checked;
+      const des = document.getElementById('f-des').checked;
+
+      let list = data.slice();
+
+      if(esp)  list = list.filter(x => x.especie === esp);
+      if(tam)  list = list.filter(x => x.tam === tam);
+      if(prov) list = list.filter(x => x.provincia === prov);
+      if(edad) list = list.filter(x => String(x.edad) === String(edad));
+      if(vac)  list = list.filter(x => x.vacunado);
+      if(est)  list = list.filter(x => x.esterilizado);
+      if(des)  list = list.filter(x => x.desparasitado);
+
+      render(list);
+    }
+
+    document.getElementById('btn-filters').addEventListener('click', applyFilters);
+
+    // Render inicial
+    render(data);
+  </script>
+</body>
+</html>

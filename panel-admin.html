@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AdoptaRD — Panel Administrador</title>
+<style>
+  :root{--primary:#2F7D5C;--bg:#F6F7F9;--text:#111;--muted:#555;--danger:#dc3545;--warning:#ffc107;--success:#28a745}
+  *{box-sizing:border-box} 
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  a{text-decoration:none;color:inherit}
+  .topbar{background:#fff;border-bottom:2px solid var(--primary);padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+  .brand{color:var(--primary);font-weight:800;font-size:20px;display:flex;align-items:center;gap:8px}
+  .admin-badge{background:var(--danger);color:#fff;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase}
+  .user-menu{display:flex;align-items:center;gap:12px}
+  .avatar{width:40px;height:40px;border-radius:999px;background:var(--danger);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  .btn{background:var(--primary);color:#fff;border:0;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;transition:opacity 0.2s;display:inline-block}
+  .btn.small{padding:6px 10px;font-size:12px}
+  .btn:hover{opacity:0.9}
+  .btn.secondary{background:#6c757d}
+  .btn.danger{background:var(--danger)}
+  .btn.warning{background:var(--warning);color:#111}
+  .btn.success{background:var(--success)}
+  .wrap{max-width:1400px;margin:auto;padding:24px}
+  h1{margin:0 0 8px 0;font-size:28px}
+  .subtitle{color:var(--muted);font-size:14px;margin-bottom:24px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+  .kpi-card{background:#fff;border:1px solid #eee;border-radius:12px;padding:18px;transition:box-shadow 0.2s,transform 0.2s;cursor:pointer}
+  .kpi-card:hover{box-shadow:0 4px 12px rgba(0,0,0,0.08);transform:translateY(-2px)}
+  .kpi-icon{font-size:32px;margin-bottom:10px}
+  .kpi-label{font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:600;letter-spacing:0.5px;margin-bottom:6px}
+  .kpi-value{font-size:32px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .kpi-change{font-size:12px;font-weight:600;color:var(--success)}
+  .card{background:#fff;border:1px solid #eee;border-radius:16px;padding:20px;margin-bottom:16px}
+  .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .section-header h3{margin:0;font-size:18px;font-weight:700}
+  .tabs{display:flex;gap:8px;margin-bottom:16px;border-bottom:2px solid #e7e7e7}
+  .tab{padding:10px 16px;cursor:pointer;font-weight:600;font-size:14px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s}
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+  .filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+  .filter-bar input,.filter-bar select{padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px}
+  .filter-bar input{flex:1;min-width:200px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead{background:#f8f9fa}
+  th{padding:12px;border-bottom:2px solid #e7e7e7;text-align:left;font-weight:600;font-size:12px;text-transform:uppercase;color:var(--muted);letter-spacing:0.5px}
+  td{padding:12px;border-bottom:1px solid #eee}
+  tbody tr:hover{background:#f8f9fa}
+  tbody tr:last-child td{border-bottom:0}
+  .badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600}
+  .badge.verified{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+  .badge.pending{background:#fff3cd;color:#856404;border:1px solid #ffc107}
+  .badge.rejected{background:#f8d7da;color:#721c24;border:1px solid #f5c6cb}
+  .badge.suspended{background:#e2e3e5;color:#383d41;border:1px solid #d6d8db}
+  .alert{padding:14px 16px;border-radius:10px;margin-bottom:16px;font-size:14px;display:flex;gap:10px;align-items:start}
+  .alert.info{background:#d1ecf1;color:#0c5460;border:1px solid #bee5eb}
+  .alert.warning{background:#fff3cd;color:#856404;border:1px solid #ffc107}
+  .alert-icon{font-size:20px;flex-shrink:0}
+  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+  .stat-item{background:#f8f9fa;padding:14px;border-radius:10px;text-align:center}
+  .stat-number{font-size:24px;font-weight:700;color:var(--primary)}
+  .stat-label{font-size:12px;color:var(--muted);margin-top:4px}
+  /* Ocultamos hasta validar rol */
+  main[hidden]{display:none}
+  @media (max-width:960px){
+    .kpis{grid-template-columns:1fr 1fr}
+    .stats-grid{grid-template-columns:1fr}
+    .topbar{flex-direction:column;gap:12px;align-items:flex-start}
+  }
+  @media (max-width:640px){
+    .kpis{grid-template-columns:1fr}
+    .wrap{padding:16px}
+    table{font-size:12px}
+    th,td{padding:8px}
+    .action-group{flex-direction:column}
+    .filter-bar{flex-direction:column}
+    .filter-bar input,.filter-bar select{width:100%}
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a href="index.html" style="display:flex;align-items:center;gap:8px;color:inherit">
+        <span>🐾 AdoptaRD</span>
+      </a>
+      <span class="admin-badge">Admin</span>
+    </div>
+    <div class="user-menu">
+      <span id="adminNameTop" style="font-size:14px;color:var(--muted)">Administrador Principal</span>
+      <div class="avatar" id="adminAvatar">AP</div>
+      <button class="btn small" id="logoutBtn">Salir</button>
+    </div>
+  </header>
+
+  <main class="wrap" hidden>
+    <h1>Panel de Administración</h1>
+    <p class="subtitle">Gestión completa de la plataforma AdoptaRD</p>
+
+    <div class="alert info">
+      <span class="alert-icon">ℹ️</span>
+      <div>
+        <strong>Sistema operativo:</strong> Todos los servicios funcionando correctamente. Última actualización: 26 Nov 2025, 10:30 AM
+      </div>
+    </div>
+    
+    <section class="kpis">
+      <div class="kpi-card" onclick="alert('Ver detalles de refugios')">
+        <div class="kpi-icon">🏢</div>
+        <div class="kpi-label">Refugios verificados</div>
+        <div class="kpi-value">12</div>
+        <div class="kpi-change">↑ 2 este mes</div>
+      </div>
+      <div class="kpi-card" onclick="alert('Ver todos los animales')">
+        <div class="kpi-icon">🐕</div>
+        <div class="kpi-label">Animales publicados</div>
+        <div class="kpi-value">134</div>
+        <div class="kpi-change">↑ 18 este mes</div>
+      </div>
+      <div class="kpi-card" onclick="alert('Ver solicitudes')">
+        <div class="kpi-icon">📋</div>
+        <div class="kpi-label">Solicitudes del mes</div>
+        <div class="kpi-value">87</div>
+        <div class="kpi-change">↑ 23% vs mes anterior</div>
+      </div>
+      <div class="kpi-card" onclick="alert('Ver donaciones')">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-label">Donaciones totales</div>
+        <div class="kpi-value">RD$ 95.2K</div>
+        <div class="kpi-change">↑ 15% este mes</div>
+      </div>
+    </section>
+
+    <div class="tabs">
+      <div class="tab active" onclick="showTab('refugios', event)">Refugios</div>
+      <div class="tab" onclick="showTab('usuarios', event)">Usuarios</div>
+      <div class="tab" onclick="showTab('auditoria', event)">Auditoría</div>
+      <div class="tab" onclick="showTab('reportes', event)">Reportes</div>
+    </div>
+
+    <section class="card" id="refugios-section">
+      <div class="section-header">
+        <h3>🏢 Gestión de Refugios</h3>
+        <button class="btn success small" onclick="alert('Agregar nuevo refugio (demo)')">+ Agregar refugio</button>
+      </div>
+      
+      <div class="filter-bar">
+        <input type="search" placeholder="Buscar por nombre o provincia..."/>
+        <select>
+          <option>Todos los estados</option>
+          <option>Verificado</option>
+          <option>Pendiente</option>
+          <option>Suspendido</option>
+          <option>Rechazado</option>
+        </select>
+        <select>
+          <option>Todas las provincias</option>
+          <option>Santo Domingo</option>
+          <option>Santiago</option>
+          <option>La Vega</option>
+        </select>
+      </div>
+
+      <table aria-label="Gestión de refugios">
+        <thead>
+          <tr>
+            <th>Refugio</th>
+            <th>Provincia</th>
+            <th>Contacto</th>
+            <th>Animales</th>
+            <th>Estado</th>
+            <th>Registro</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Huellitas RD</strong></td>
+            <td>Santo Domingo</td>
+            <td>hola@huellitas.org</td>
+            <td>24</td>
+            <td><span class="badge verified">✓ Verificado</span></td>
+            <td>15/03/2020</td>
+            <td>
+              <div class="action-group">
+                <button class="btn small secondary" onclick="viewRefuge('Huellitas RD')">👁️ Ver</button>
+                <button class="btn small warning" onclick="changeStatus('Huellitas RD')">⚙️ Estado</button>
+                <button class="btn small danger" onclick="suspendRefuge('Huellitas RD')">🚫 Suspender</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>PADELA RD</strong></td>
+            <td>Santiago</td>
+            <td>info@padelard.org</td>
+            <td>18</td>
+            <td><span class="badge pending">⏳ Pendiente</span></td>
+            <td>10/01/2025</td>
+            <td>
+              <div class="action-group">
+                <button class="btn small" onclick="approveRefuge('PADELA RD')">✓ Verificar</button>
+                <button class="btn small danger" onclick="rejectRefuge('PADELA RD')">✕ Rechazar</button>
+                <button class="btn small secondary" onclick="viewRefuge('PADELA RD')">👁️ Ver</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Amigos Peludos</strong></td>
+            <td>La Vega</td>
+            <td>contacto@amigospeludos.do</td>
+            <td>15</td>
+            <td><span class="badge verified">✓ Verificado</span></td>
+            <td>22/08/2021</td>
+            <td>
+              <div class="action-group">
+                <button class="btn small secondary" onclick="viewRefuge('Amigos Peludos')">👁️ Ver</button>
+                <button class="btn small warning" onclick="changeStatus('Amigos Peludos')">⚙️ Estado</button>
+                <button class="btn small danger" onclick="suspendRefuge('Amigos Peludos')">🚫 Suspender</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Rescate Animal RD</strong></td>
+            <td>San Cristóbal</td>
+            <td>rescate@animal.do</td>
+            <td>0</td>
+            <td><span class="badge rejected">✕ Rechazado</span></td>
+            <td>05/02/2025</td>
+            <td>
+              <div class="action-group">
+                <button class="btn small secondary" onclick="viewRefuge('Rescate Animal RD')">👁️ Ver</button>
+                <button class="btn small" onclick="reconsiderRefuge('Rescate Animal RD')">🔄 Reconsiderar</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">8</div>
+          <div class="stat-label">Activos este mes</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Pendientes revisión</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">92%</div>
+          <div class="stat-label">Tasa de aprobación</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-header">
+        <h3>📊 Auditoría del Sistema</h3>
+        <button class="btn small secondary" onclick="alert('Exportar logs (demo)')">📥 Exportar logs</button>
+      </div>
+      <table aria-label="Registro de auditoría">
+        <thead>
+          <tr>
+            <th>Fecha/Hora</th>
+            <th>Entidad</th>
+            <th>Acción</th>
+            <th>Usuario</th>
+            <th>IP</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2025-02-26 10:15:23</td>
+            <td>Refugios</td>
+            <td><span class="badge success">Verificar</span></td>
+            <td>admin01</td>
+            <td>190.166.25.10</td>
+            <td>Verificado: Huellitas RD</td>
+          </tr>
+          <tr>
+            <td>2025-02-26 09:42:11</td>
+            <td>Animales</td>
+            <td><span class="badge verified">Crear</span></td>
+            <td>refugio02</td>
+            <td>190.166.30.45</td>
+            <td>Animal creado: Luna</td>
+          </tr>
+          <tr>
+            <td>2025-02-26 08:30:05</td>
+            <td>Solicitudes</td>
+            <td><span class="badge success">Aprobar</span></td>
+            <td>refugio01</td>
+            <td>190.166.25.10</td>
+            <td>Adopción aprobada: Milo</td>
+          </tr>
+          <tr>
+            <td>2025-02-25 17:22:18</td>
+            <td>Donaciones</td>
+            <td><span class="badge verified">Registrar</span></td>
+            <td>refugio03</td>
+            <td>190.166.42.88</td>
+            <td>Donación: RD$ 2,000</td>
+          </tr>
+          <tr>
+            <td>2025-02-25 16:10:33</td>
+            <td>Refugios</td>
+            <td><span class="badge danger">Suspender</span></td>
+            <td>admin01</td>
+            <td>190.166.25.10</td>
+            <td>Suspendido: Refugio XYZ</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Auth -->
+  <script src="auth.js"></script>
+  <script>
+    // Guard de acceso (funciona con o sin auth.js)
+    function guardAdmin() {
+      const role = (localStorage.getItem('userRole') || 'visitante').toLowerCase();
+      const email = localStorage.getItem('userEmail') || 'admin@adoptard.do';
+      // Mostrar nombre/initiales
+      document.getElementById('adminNameTop').textContent = email;
+      const initials = email.includes('@') ? email[0] + email[1] : 'AP';
+      document.getElementById('adminAvatar').textContent = initials.toUpperCase();
+
+      if (role === 'admin') {
+        document.querySelector('main').hidden = false;
+        return;
+      }
+      if (role === 'refugio') {
+        location.replace('panel-refugio.html');
+        return;
+      }
+      // visitante → login con redirección de vuelta
+      const next = encodeURIComponent('panel-admin.html');
+      location.replace(`login.html?next=${next}`);
+    }
+
+    try { if (typeof initAuthUI === 'function') initAuthUI(); } catch(e){}
+    guardAdmin();
+
+    // Logout
+    function doLogout(){
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userEmail');
+      location.href = 'index.html';
+    }
+    document.getElementById('logoutBtn').onclick = doLogout;
+
+    // UI demos
+    function showTab(tabName, ev) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      if (ev && ev.target) ev.target.classList.add('active');
+      alert(`Mostrando sección: ${tabName} (demo)`);
+    }
+    function viewRefuge(name){ alert(`Ver detalles completos de: ${name}`); }
+    function approveRefuge(name){ if(confirm(`¿Verificar y aprobar el refugio "${name}"?`)) alert(`✓ Refugio "${name}" verificado.`); }
+    function rejectRefuge(name){ const r=prompt(`Motivo del rechazo para "${name}":`); if(r) alert(`✗ Rechazado. Motivo: ${r}`); }
+    function suspendRefuge(name){ if(confirm(`¿Suspender el refugio "${name}"?`)){ const r=prompt('Motivo de la suspensión:'); if(r) alert(`🚫 Suspendido. Motivo: ${r}`);} }
+    function changeStatus(name){ const s=prompt(`Cambiar estado de "${name}" a:\n1.Verificado\n2.Pendiente\n3.Suspendido\n4.Rechazado`); const m=['','Verificado','Pendiente','Suspendido','Rechazado']; if(s>=1&&s<=4) alert(`Estado cambiado a: ${m[s]}`); }
+    function reconsiderRefuge(name){ if(confirm(`¿Reconsiderar la solicitud de "${name}"?`)) alert(`Solicitud de "${name}" movida a Pendiente.`); }
+  </script>
+</body>
+</html>

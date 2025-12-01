@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AdoptaRD — Ficha</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+  :root{--primary:#2F7D5C;--bg:#F6F7F9;--text:#111;--muted:#444}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  .wrap{max-width:1200px;margin:auto;padding:24px}
+  .nav{display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:1px solid #e7e7e7;padding:14px 24px;position:sticky;top:0;z-index:100}
+  .brand{color:var(--primary);font-weight:800;font-size:20px;text-decoration:none}
+  .nav nav.menu{display:flex;gap:16px;color:var(--muted)}
+  .nav nav.menu a:hover{color:var(--primary)}
+  .back-link{display:inline-flex;align-items:center;gap:6px;color:var(--muted);margin:20px 0 10px;font-size:14px;transition:color .2s;text-decoration:none}
+  .back-link:hover{color:var(--primary)}
+  h1{margin:10px 0;font-size:36px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}
+  .panel{background:#fff;border:1px solid #eee;border-radius:16px;padding:20px}
+  .gallery{aspect-ratio:3/2;background:linear-gradient(135deg,#dfe6eb 0%,#c5d4e0 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:120px}
+  .thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+  .thumb{aspect-ratio:1/1;background:#eef1f4;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:32px}
+  .info-row{display:flex;gap:20px;flex-wrap:wrap;margin:16px 0;padding:16px;background:#f8f9fa;border-radius:10px}
+  .info-item{flex:1;min-width:120px}
+  .info-label{font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:600;letter-spacing:.5px;margin-bottom:4px}
+  .info-value{font-size:16px;font-weight:600;color:var(--text)}
+  .section-title{font-size:14px;font-weight:700;text-transform:uppercase;color:var(--muted);margin:20px 0 10px;letter-spacing:.5px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .chip{background:#e8f5f1;border:1px solid #b8e6d5;color:#2F7D5C;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:600}
+  .description{line-height:1.6;margin:10px 0;color:var(--text)}
+  .muted{color:var(--muted)}
+  .status-badge{display:inline-block;background:#d4edda;color:#155724;padding:6px 12px;border-radius:6px;font-size:13px;font-weight:600;border:1px solid #c3e6cb}
+  .refuge-card{background:#f8f9fa;padding:14px;border-radius:10px;margin:16px 0;border:1px solid #e9ecef}
+  .refuge-card strong{color:var(--text)}
+  .verified{color:#28a745;font-size:12px;font-weight:600}
+  hr{border:0;border-top:1px solid #e7e7e7;margin:20px 0}
+  .btn{background:var(--primary);color:#fff;border:0;padding:12px 20px;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px;transition:opacity .2s;display:inline-block;text-decoration:none}
+  .btn:hover{opacity:.9}
+  .btn.secondary{background:#eaeaea;color:#111}
+  .action-buttons{display:flex;gap:10px;margin-top:20px}
+  @media (max-width:900px){
+    .grid{grid-template-columns:1fr}
+    .nav nav.menu{display:none}
+  }
+</style>
+</head>
+<body>
+<header class="nav">
+  <a class="brand" href="index.html">🐾 AdoptaRD</a>
+  <nav class="menu" aria-label="Principal">
+    <a href="index.html">Inicio</a>
+    <a href="catalogo.html">Adopta</a>
+    <a href="refugio.html">Refugios</a>
+    <a href="donaciones.html">Donar</a>
+    <a href="panel-refugio.html">Panel Refugio</a>
+    <a href="panel-admin.html">Panel Admin</a>
+  </nav>
+  <a id="primaryAction" class="btn" href="login.html">Ingresar</a>
+</header>
+
+<main class="wrap">
+  <a href="catalogo.html" class="back-link">← Volver al catálogo</a>
+  <h1 id="nameTitle">Ficha</h1>
+
+  <section class="grid">
+    <div class="panel">
+      <div class="gallery" id="bigIcon" aria-label="Foto principal">🐾</div>
+      <div class="thumbs">
+        <div class="thumb">🐾</div>
+        <div class="thumb">🐾</div>
+        <div class="thumb">🐾</div>
+        <div class="thumb">🐾</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h2 style="margin:0;font-size:24px">Información general</h2>
+        <span class="status-badge">✓ Disponible</span>
+      </div>
+
+      <div class="info-row">
+        <div class="info-item"><div class="info-label">Especie</div><div class="info-value" id="especie"></div></div>
+        <div class="info-item"><div class="info-label">Sexo</div><div class="info-value" id="sexo"></div></div>
+        <div class="info-item"><div class="info-label">Edad</div><div class="info-value" id="edad"></div></div>
+        <div class="info-item"><div class="info-label">Tamaño</div><div class="info-value" id="tam"></div></div>
+      </div>
+
+      <div class="info-row" style="margin-top:12px">
+        <div class="info-item">
+          <div class="info-label">Ubicación</div>
+          <div class="info-value" id="ubicacion">📍 —</div>
+        </div>
+      </div>
+
+      <div class="section-title">Estado de salud</div>
+      <div class="tags" id="tags"></div>
+
+      <div class="section-title">Personalidad e historia</div>
+      <p class="description" id="historia"></p>
+
+      <hr/>
+
+      <div class="refuge-card" id="refugioCard">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <strong id="refugioNombre">Refugio</strong>
+            <span class="verified"> · ✓ Verificado</span>
+          </div>
+          <a id="refugioLink" href="refugio.html" style="color:var(--primary);font-weight:600;font-size:14px">Ver perfil →</a>
+        </div>
+        <div class="muted" id="refugioMeta" style="font-size:13px;margin-top:6px"></div>
+      </div>
+
+      <div class="action-buttons">
+        <a class="btn" id="btnAdoptar" href="formulario.html">Solicitar adopción</a>
+        <button class="btn secondary" onclick="navigator.clipboard.writeText(location.href).then(()=>alert('Enlace copiado'))">📤 Compartir</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:24px">
+    <h2 style="margin-top:0">Requisitos para adoptar</h2>
+    <ul style="line-height:1.8;color:var(--text)">
+      <li>Ser mayor de 21 años</li>
+      <li>Presentar identificación válida</li>
+      <li>Completar el formulario de adopción</li>
+      <li>Entrevista con el refugio</li>
+      <li>Espacio adecuado para la mascota</li>
+      <li>Compromiso de cuidado responsable</li>
+    </ul>
+    <p class="muted" style="font-size:14px">* Los requisitos pueden variar según el refugio.</p>
+  </section>
+</main>
+
+<script src="auth.js"></script>
+<script>
+  initAuthUI();
+
+  // Datos demo (mismos IDs que en catálogo)
+  const ANIMALES = [
+    {id:'luna',  nombre:'Luna',  especie:'Perro',  sexo:'Hembra',  tam:'Mediano', edad:2, provincia:'Santo Domingo', vacunado:true,  esterilizado:true,  desparasitado:true,  icon:'🐕', refugioId:'huellitas', refugio:'Huellitas RD', refugioProv:'Santo Domingo', historia:'Luna es sociable y muy activa; le encantan los paseos al aire libre. Convive con otros perros y disfruta de la compañía humana.'},
+    {id:'milo',  nombre:'Milo',  especie:'Gato',   sexo:'Macho',   tam:'Pequeño', edad:1, provincia:'Santiago',       vacunado:true,  esterilizado:false, desparasitado:false, icon:'🐈', refugioId:'huellitas', refugio:'Huellitas RD', refugioProv:'Santiago', historia:'Gatito juguetón y curioso. Ideal para departamentos.'},
+    {id:'nina',  nombre:'Nina',  especie:'Gato',   sexo:'Hembra',  tam:'Mediano', edad:2, provincia:'La Vega',        vacunado:false, esterilizado:true,  desparasitado:false, icon:'🐈', refugioId:'huellitas', refugio:'Huellitas RD', refugioProv:'La Vega', historia:'Tranquila y cariñosa; se adapta rápido a nuevos hogares.'}
+  ];
+
+  function getParam(name){
+    return new URLSearchParams(location.search).get(name);
+  }
+
+  const id = getParam('id') || 'luna';
+  const a = ANIMALES.find(x => x.id === id) || ANIMALES[0];
+
+  // Pinta la ficha
+  document.title = `AdoptaRD — ${a.nombre}`;
+  document.getElementById('nameTitle').textContent = a.nombre;
+  document.getElementById('bigIcon').textContent = a.icon;
+  document.getElementById('especie').textContent = a.especie;
+  document.getElementById('sexo').textContent    = a.sexo;
+  document.getElementById('edad').textContent    = `${a.edad} año${a.edad===1?'':'s'}`;
+  document.getElementById('tam').textContent     = a.tam;
+  document.getElementById('ubicacion').textContent = `📍 ${a.provincia}`;
+  document.getElementById('historia').textContent = a.historia;
+  document.getElementById('btnAdoptar').setAttribute('href', `formulario.html?id=${encodeURIComponent(a.id)}`);
+
+  // etiquetas de salud
+  const tags = [];
+  if (a.vacunado)     tags.push('<span class="chip">✓ Vacunado</span>');
+  if (a.esterilizado) tags.push('<span class="chip">✓ Esterilizado</span>');
+  if (a.desparasitado)tags.push('<span class="chip">✓ Desparasitado</span>');
+  document.getElementById('tags').innerHTML = tags.join('');
+
+  // Refugio
+  document.getElementById('refugioNombre').textContent = a.refugio;
+  document.getElementById('refugioMeta').textContent = `Refugio certificado · ${a.refugioProv}`;
+  document.getElementById('refugioLink').setAttribute('href', `refugio.html?id=${encodeURIComponent(a.refugioId)}`);
+</script>
+</body>
+</html>

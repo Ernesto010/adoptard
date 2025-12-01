@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AdoptaRD — Panel Refugio</title>
+<style>
+  :root{--primary:#2F7D5C;--bg:#F6F7F9;--text:#111;--muted:#555}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  a{text-decoration:none;color:inherit}
+  .topbar{background:#fff;border-bottom:1px solid #e7e7e7;padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+  .brand{color:var(--primary);font-weight:800;font-size:20px}
+  .user-menu{display:flex;align-items:center;gap:12px}
+  .avatar{width:36px;height:36px;border-radius:999px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  .wrap{max-width:1400px;margin:auto;padding:24px}
+  h1{margin:0 0 8px 0;font-size:28px}
+  .subtitle{color:var(--muted);font-size:14px;margin-bottom:24px}
+  .layout{display:grid;grid-template-columns:220px 1fr;gap:18px}
+  .panel{background:#fff;border:1px solid #eee;border-radius:16px;padding:16px}
+  .sidebar{position:sticky;top:24px;height:fit-content}
+  .menu{padding:0}
+  .menu a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:#444;font-size:14px;font-weight:500;transition:all .2s;margin-bottom:4px}
+  .menu a:hover{background:#f0f0f0;color:var(--text)}
+  .menu a.active{background:#e9f3ef;color:var(--primary);font-weight:600}
+  .menu-icon{width:20px;text-align:center}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+  .kpi-card{background:#fff;border:1px solid #eee;border-radius:12px;padding:18px;transition:box-shadow .2s}
+  .kpi-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.06)}
+  .kpi-label{font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:600;letter-spacing:.5px;margin-bottom:8px}
+  .kpi-value{font-size:28px;font-weight:700;color:var(--text);margin-bottom:4px}
+  .kpi-change{font-size:12px;font-weight:600}
+  .kpi-change.positive{color:#28a745}
+  .kpi-change.neutral{color:var(--muted)}
+  .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .section-header h3{margin:0;font-size:18px}
+  .row{display:grid;grid-template-columns:1fr;gap:12px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  thead{background:#f8f9fa}
+  th{padding:12px;border-bottom:2px solid #e7e7e7;text-align:left;font-weight:600;font-size:12px;text-transform:uppercase;color:var(--muted);letter-spacing:.5px}
+  td{padding:12px;border-bottom:1px solid #eee}
+  tbody tr:hover{background:#f8f9fa}
+  tbody tr:last-child td{border-bottom:0}
+  .badge{display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600}
+  .badge.pending{background:#fff3cd;color:#856404;border:1px solid #ffc107}
+  .badge.approved{background:#d4edda;color:#155724;border:1px solid #c3e6cb}
+  .btn{background:var(--primary);color:#fff;border:0;padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;transition:opacity .2s}
+  .btn:hover{opacity:.9}
+  .btn.secondary{background:#6c757d}
+  .btn.danger{background:#dc3545}
+  .btn.small{padding:6px 10px;font-size:12px}
+  .action-group{display:flex;gap:6px}
+  .empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+  .empty-state-icon{font-size:48px;margin-bottom:12px;opacity:.5}
+  .filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+  .filter-bar select{padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px}
+  /* Ocultamos el contenido hasta validar el rol */
+  main[hidden]{display:none}
+  @media (max-width:960px){
+    .layout{grid-template-columns:1fr}
+    .sidebar{position:static}
+    .kpis{grid-template-columns:1fr}
+    .topbar{flex-direction:column;gap:12px;align-items:flex-start}
+  }
+  @media (max-width:640px){
+    .wrap{padding:16px}
+    table{font-size:12px}
+    th,td{padding:8px}
+    .action-group{flex-direction:column}
+  }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">🐾 AdoptaRD</a>
+    <div class="user-menu">
+      <span id="refNameTop" style="font-size:14px;color:var(--muted)">Huellitas RD</span>
+      <div class="avatar" id="refAvatar">HR</div>
+      <button class="btn small" id="logoutBtn">Salir</button>
+    </div>
+  </header>
+
+  <!-- oculto hasta pasar el guard -->
+  <main class="wrap" hidden>
+    <h1>Panel de control</h1>
+    <p class="subtitle">Gestiona tu refugio, solicitudes y donaciones desde un solo lugar</p>
+
+    <section class="layout">
+      <aside class="panel sidebar menu">
+        <a class="active" href="#dashboard"><span class="menu-icon">📊</span><span>Dashboard</span></a>
+        <a href="#animales"><span class="menu-icon">🐕</span><span>Animales</span></a>
+        <a href="#solicitudes"><span class="menu-icon">📋</span><span>Solicitudes</span></a>
+        <a href="#donaciones"><span class="menu-icon">💰</span><span>Donaciones</span></a>
+        <a href="#documentos"><span class="menu-icon">📄</span><span>Documentos</span></a>
+        <a href="#perfil"><span class="menu-icon">⚙️</span><span>Configuración</span></a>
+        <hr style="border:0;border-top:1px solid #e7e7e7;margin:12px 0">
+        <a href="javascript:void(0)" id="logoutLink" style="color:#dc3545"><span class="menu-icon">🚪</span><span>Cerrar sesión</span></a>
+      </aside>
+
+      <div>
+        <div class="kpis">
+          <div class="kpi-card"><div class="kpi-label">Nuevas solicitudes</div><div class="kpi-value">7</div><div class="kpi-change positive">↑ 2 desde ayer</div></div>
+          <div class="kpi-card"><div class="kpi-label">Animales publicados</div><div class="kpi-value">24</div><div class="kpi-change neutral">3 en proceso</div></div>
+          <div class="kpi-card"><div class="kpi-label">Donaciones (mes)</div><div class="kpi-value">RD$ 18,500</div><div class="kpi-change positive">↑ 12% vs mes anterior</div></div>
+        </div>
+
+        <div class="row">
+          <div class="panel">
+            <div class="section-header">
+              <h3>📋 Solicitudes pendientes de revisión</h3>
+              <a href="#todas" style="color:var(--primary);font-size:14px;font-weight:600">Ver todas →</a>
+            </div>
+            <div class="filter-bar">
+              <select>
+                <option>Todas las solicitudes</option><option>En revisión</option><option>Aprobadas</option><option>Rechazadas</option>
+              </select>
+              <select>
+                <option>Todos los animales</option><option>Luna</option><option>Milo</option><option>Nina</option>
+              </select>
+            </div>
+            <table aria-label="Solicitudes de adopción">
+              <thead><tr><th>Animal</th><th>Adoptante</th><th>Contacto</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><strong>Luna</strong></td><td>Juan Pérez</td><td>juan.p@email.com</td><td>10/02/2025</td>
+                  <td><span class="badge pending">En revisión</span></td>
+                  <td><div class="action-group"><button class="btn small" onclick="approveRequest('Luna','Juan Pérez')">✓ Aprobar</button><button class="btn small danger" onclick="rejectRequest('Luna','Juan Pérez')">✕ Rechazar</button></div></td>
+                </tr>
+                <tr>
+                  <td><strong>Milo</strong></td><td>Rosa Torres</td><td>rosa.t@email.com</td><td>11/02/2025</td>
+                  <td><span class="badge pending">En revisión</span></td>
+                  <td><div class="action-group"><button class="btn small" onclick="approveRequest('Milo','Rosa Torres')">✓ Aprobar</button><button class="btn small danger" onclick="rejectRequest('Milo','Rosa Torres')">✕ Rechazar</button></div></td>
+                </tr>
+                <tr>
+                  <td><strong>Nina</strong></td><td>Carlos Martínez</td><td>carlos.m@email.com</td><td>12/02/2025</td>
+                  <td><span class="badge pending">En revisión</span></td>
+                  <td><div class="action-group"><button class="btn small" onclick="approveRequest('Nina','Carlos Martínez')">✓ Aprobar</button><button class="btn small danger" onclick="rejectRequest('Nina','Carlos Martínez')">✕ Rechazar</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <div class="section-header">
+              <h3>💰 Donaciones pendientes de conciliación</h3>
+              <button class="btn small" onclick="alert('Exportar reporte (demo)')">📥 Exportar</button>
+            </div>
+            <table aria-label="Donaciones">
+              <thead><tr><th>Donante</th><th>Monto</th><th>Referencia</th><th>Fecha</th><th>Método</th><th>Acciones</th></tr></thead>
+              <tbody>
+                <tr><td>Ana González</td><td><strong>RD$ 2,000</strong></td><td><code>TRX-123456</code></td><td>12/02/2025</td><td>Transferencia</td><td><button class="btn small" onclick="reconcileDonation('Ana González','2000')">✓ Conciliar</button></td></tr>
+                <tr><td>José Morales</td><td><strong>RD$ 1,500</strong></td><td><code>TRX-789012</code></td><td>12/02/2025</td><td>Pago móvil</td><td><button class="btn small" onclick="reconcileDonation('José Morales','1500')">✓ Conciliar</button></td></tr>
+                <tr><td>María Rodríguez</td><td><strong>RD$ 3,000</strong></td><td><code>TRX-345678</code></td><td>13/02/2025</td><td>Transferencia</td><td><button class="btn small" onclick="reconcileDonation('María Rodríguez','3000')">✓ Conciliar</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <div class="section-header"><h3>🐕 Acciones rápidas</h3></div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+              <button class="btn" onclick="alert('Agregar animal (demo)')" style="padding:14px;display:flex;align-items:center;gap:8px;justify-content:center"><span style="font-size:20px">➕</span><span>Publicar animal</span></button>
+              <button class="btn secondary" onclick="alert('Ver reportes (demo)')" style="padding:14px;display:flex;align-items:center;gap:8px;justify-content:center"><span style="font-size:20px">📊</span><span>Ver reportes</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Auth & guard -->
+  <script src="auth.js"></script>
+  <script>
+    // Pequeño guard local por si no estás usando auth.js
+    function localGuard() {
+      const role = (localStorage.getItem('userRole') || 'visitante').toLowerCase();
+      const name = localStorage.getItem('userEmail') || 'Huellitas RD';
+      document.getElementById('refNameTop').textContent = name.includes('@') ? name : 'Huellitas RD';
+      document.getElementById('refAvatar').textContent = (name[0] || 'H') + (name.split('@')[0]?.[1] || 'R');
+
+      if (role === 'refugio') {
+        document.querySelector('main').hidden = false; // mostrar contenido
+        return;
+      }
+      if (role === 'admin') {
+        location.replace('panel-admin.html'); // admins no ven panel de refugio
+        return;
+      }
+      // visitante → pedir login y volver aquí
+      const next = encodeURIComponent('panel-refugio.html');
+      location.replace(`login.html?next=${next}`);
+    }
+
+    // Preferimos initAuthUI si existe (nuestro auth.js), y luego aplicamos el guard
+    try { if (typeof initAuthUI === 'function') initAuthUI(); } catch(e){}
+    localGuard();
+
+    // Logout en botón y link lateral
+    function doLogout(){
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userEmail');
+      location.href = 'index.html';
+    }
+    document.getElementById('logoutBtn').onclick = doLogout;
+    document.getElementById('logoutLink').onclick = doLogout;
+
+    // Acciones demo
+    function approveRequest(animal, adoptante){ if(confirm(`¿Aprobar solicitud de adopción de ${animal} para ${adoptante}?`)){ alert(`✓ Solicitud aprobada. Se notificará a ${adoptante} por email.`); } }
+    function rejectRequest(animal, adoptante){ if(confirm(`¿Rechazar solicitud de adopción de ${animal} para ${adoptante}?`)){ const reason = prompt('Motivo del rechazo (opcional):'); alert(`✗ Solicitud rechazada. Se notificará a ${adoptante}.`); } }
+    function reconcileDonation(donante, monto){ if(confirm(`¿Conciliar donación de ${donante} por RD$ ${monto}?`)){ alert(`✓ Donación conciliada. Se enviará confirmación a ${donante}.`); } }
+  </script>
+</body>
+</html>

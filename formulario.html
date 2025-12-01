@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AdoptaRD — Solicitud de adopción</title>
+<style>
+  :root{--primary:#2F7D5C;--bg:#F6F7F9;--text:#111;--muted:#444}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  a{text-decoration:none;color:inherit}
+  .wrap{max-width:1000px;margin:auto;padding:24px}
+  .navbar{position:sticky;top:0;background:#fff;border-bottom:1px solid #e7e7e7;z-index:5}
+  .navrow{max-width:1200px;margin:auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+  .brand{color:var(--primary);font-weight:800;font-size:20px}
+  .menu{display:flex;gap:16px;color:var(--muted)}
+  .menu a:hover{color:var(--primary)}
+  .btn{background:var(--primary);color:#fff;border:0;padding:10px 16px;border-radius:10px;font-weight:600;cursor:pointer}
+  h1{margin:0 0 8px 0;font-size:28px}
+  .subtitle{color:var(--muted);font-size:14px;margin-bottom:20px}
+
+  .progress-container{margin-bottom:24px}
+  .steps{display:flex;justify-content:space-between;margin-bottom:10px}
+  .step{flex:1;text-align:center;font-size:12px;color:var(--muted);font-weight:600}
+  .step.active,.step.completed{color:var(--primary)}
+  .bar{height:12px;background:#dfe6eb;border-radius:999px;overflow:hidden}
+  .fill{height:100%;width:40%;background:var(--primary);transition:width .3s;border-radius:999px}
+
+  .panel{background:#fff;border:1px solid #eee;border-radius:16px;padding:24px}
+  .form-section{margin-bottom:24px}
+  label{display:block;margin-bottom:8px;font-weight:600;font-size:14px}
+  .helper-text{font-size:13px;color:var(--muted);margin-top:4px}
+  textarea,input[type="text"],input[type="email"],input[type="tel"]{width:100%;padding:12px 14px;border:1px solid #ddd;border-radius:10px;font:inherit;font-size:14px;transition:border-color .2s,box-shadow .2s}
+  textarea:focus,input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(47,125,92,.1)}
+  textarea{resize:vertical;min-height:100px}
+  .char-count{font-size:12px;color:var(--muted);text-align:right;margin-top:4px}
+
+  .checkbox-label{display:flex;align-items:start;gap:10px;cursor:pointer;padding:12px;background:#f8f9fa;border-radius:8px;margin-top:16px}
+  .checkbox-label:hover{background:#eef1f4}
+  .checkbox-label input{margin-top:3px;width:18px;height:18px;cursor:pointer}
+
+  .actions{display:flex;gap:12px;margin-top:24px;padding-top:24px;border-top:1px solid #eee}
+  .btn.secondary{background:#eaeaea;color:#111}
+  .btn.secondary:hover{background:#ddd}
+
+  .alert{background:#fff3cd;border:1px solid #ffc107;color:#856404;padding:14px;border-radius:10px;margin-bottom:20px;font-size:14px;display:flex;gap:10px}
+  .alert-icon{font-size:20px}
+
+  @media (max-width:640px){
+    .wrap{padding:16px}
+    .panel{padding:16px}
+    .steps{font-size:10px}
+    h1{font-size:22px}
+    .menu{display:none}
+  }
+</style>
+</head>
+<body>
+  <!-- HEADER con botón único Ingresar/Salir -->
+  <header class="navbar">
+    <div class="navrow">
+      <a class="brand" href="index.html">🐾 AdoptaRD</a>
+      <nav class="menu" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="catalogo.html">Adopta</a>
+        <a href="refugio.html">Refugios</a>
+        <a href="donaciones.html">Donar</a>
+        <a href="panel-refugio.html">Panel Refugio</a>
+        <a href="panel-admin.html">Panel Admin</a>
+      </nav>
+      <a class="btn btn-login" id="loginBtn" href="login.html">Ingresar</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <h1 id="tituloForm">Solicitud de adopción</h1>
+    <p class="subtitle" id="subForm">Completa este formulario para iniciar el proceso de adopción responsable</p>
+
+    <div class="progress-container">
+      <div class="steps">
+        <div class="step completed">1. Datos</div>
+        <div class="step active">2. Motivo</div>
+        <div class="step">3. Hogar</div>
+        <div class="step">4. Referencias</div>
+        <div class="step">5. Revisión</div>
+      </div>
+      <div class="bar" aria-label="Progreso">
+        <div class="fill" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+
+    <div class="alert">
+      <span class="alert-icon">💡</span>
+      <div><strong>Consejo:</strong> Responde con honestidad. Esto nos ayuda a lograr una adopción exitosa.</div>
+    </div>
+
+    <section class="panel">
+      <div class="form-section">
+        <label for="motivo">¿Por qué deseas adoptar a <span id="nombreMascota1">esta mascota</span>?</label>
+        <textarea id="motivo" maxlength="500" placeholder="Cuéntanos tu motivación…" oninput="updateCharCount(this,'motivo-count')"></textarea>
+        <div class="char-count"><span id="motivo-count">0</span>/500 caracteres</div>
+      </div>
+
+      <div class="form-section">
+        <label for="experiencia">Experiencia previa con mascotas</label>
+        <p class="helper-text">¿Has tenido mascotas antes? Tipo de animal, tiempo de cuidado, responsabilidades, etc.</p>
+        <textarea id="experiencia" placeholder="Ej.: Tuve un perro 10 años; me encargaba de paseos, alimentación y veterinario…" oninput="updateCharCount(this,'experiencia-count')"></textarea>
+        <div class="char-count"><span id="experiencia-count">0</span> caracteres</div>
+      </div>
+
+      <div class="form-section">
+        <label for="hogar">Condiciones del hogar</label>
+        <p class="helper-text">Casa/apartamento, patio, niños, otras mascotas, con quién vives.</p>
+        <textarea id="hogar" placeholder="Ej.: Casa con patio cercado; dos niños (8 y 12); sin otras mascotas…" oninput="updateCharCount(this,'hogar-count')"></textarea>
+        <div class="char-count"><span id="hogar-count">0</span> caracteres</div>
+      </div>
+
+      <div class="form-section">
+        <label for="tiempo">Tiempo disponible</label>
+        <p class="helper-text">Paseos, juegos, entrenamiento y cuidados diarios.</p>
+        <textarea id="tiempo" placeholder="Ej.: Trabajo desde casa 4 días; paseos 30 min mañana y tarde…" oninput="updateCharCount(this,'tiempo-count')"></textarea>
+        <div class="char-count"><span id="tiempo-count">0</span> caracteres</div>
+      </div>
+
+      <label class="checkbox-label">
+        <input type="checkbox" id="terminos" required>
+        <span>Acepto las políticas de adopción responsable y autorizo el tratamiento de mis datos (Ley 172-13). El refugio puede realizar seguimiento.</span>
+      </label>
+
+      <div class="actions">
+        <a class="btn secondary" id="btnAtras" href="ficha.html">← Atrás</a>
+        <button class="btn" onclick="validateAndNext()">Siguiente →</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="auth.js"></script>
+  <script>
+    // Inicializa visibilidad del header según sesión
+    initAuthUI?.();
+
+    // Datos demo mínimos para mostrar nombre por id
+    const ANIMALES = [
+      {id:'luna', nombre:'Luna'},
+      {id:'milo', nombre:'Milo'},
+      {id:'nina', nombre:'Nina'}
+    ];
+
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || 'luna';
+    const animal = ANIMALES.find(a => a.id === id) || ANIMALES[0];
+
+    // Personaliza textos y enlaces según id
+    document.getElementById('tituloForm').textContent = `Solicitud de adopción para ${animal.nombre}`;
+    document.getElementById('subForm').textContent = 'Completa este formulario para iniciar el proceso de adopción responsable';
+    document.getElementById('nombreMascota1').textContent = animal.nombre;
+    document.getElementById('btnAtras').setAttribute('href', `ficha.html?id=${encodeURIComponent(animal.id)}`);
+
+    // Utilidades del formulario
+    function updateCharCount(textarea, counterId){
+      const counter = document.getElementById(counterId);
+      if(counter) counter.textContent = textarea.value.length;
+    }
+
+    function validateAndNext(){
+      const motivo = document.getElementById('motivo').value.trim();
+      const experiencia = document.getElementById('experiencia').value.trim();
+      const hogar = document.getElementById('hogar').value.trim();
+      const tiempo = document.getElementById('tiempo').value.trim();
+      const terminos = document.getElementById('terminos').checked;
+
+      if(!motivo || !experiencia || !hogar || !tiempo){
+        alert('Por favor, completa todos los campos antes de continuar.');
+        return;
+      }
+      if(motivo.length < 50){
+        alert('Describe con más detalle tu motivación (mínimo 50 caracteres).');
+        return;
+      }
+      if(!terminos){
+        alert('Debes aceptar las políticas de adopción para continuar.');
+        return;
+      }
+
+      // Demo: avanzar
+      alert(`✓ Formulario validado. Próximo paso (demo) para ${animal.nombre}.`);
+      // Aquí podrías hacer: location.href = `formulario-paso3.html?id=${animal.id}`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AdoptaRD — Inicio</title>
+
+<!-- estilos globales -->
+<link rel="stylesheet" href="styles.css">
+
+<style>
+  :root{
+    --primary:#2F7D5C; --accent:#FFC857;
+    --bg:#F6F7F9; --text:#111; --muted:#444; --card:#fff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1200px;margin:auto;padding:24px}
+  .navbar{position:sticky;top:0;background:#fff;border-bottom:1px solid #e7e7e7}
+  .navwrap{display:flex;gap:24px;align-items:center;justify-content:space-between;padding:14px 24px}
+  .brand{color:var(--primary);font-weight:800;font-size:20px}
+  .menu{display:flex;gap:18px;color:var(--muted);flex-wrap:wrap}
+  .menu a:hover{color:var(--primary)}
+  .btn{background:var(--primary);color:#fff;border:0;padding:10px 16px;border-radius:10px;font-weight:600;cursor:pointer;transition:opacity .2s}
+  .btn:hover{opacity:.9}
+  .btn.light{background:#eaeaea;color:var(--text)}
+  .hero{background:#fff;border:1px solid #eee;border-radius:18px;padding:28px;margin-top:24px}
+  .search{display:flex;gap:12px;margin-top:14px}
+  .search input,.search select{flex:1;padding:12px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px}
+  .search input:focus,.search select:focus{outline:2px solid var(--primary);border-color:var(--primary)}
+  h1{margin:0 0 6px 0;font-size:32px}
+  .muted{color:var(--muted)}
+  .section-title{display:flex;align-items:center;justify-content:space-between;margin:26px 0 8px}
+  .section-title h2{margin:0}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}
+  .card{background:var(--card);border:1px solid #eee;border-radius:16px;overflow:hidden;transition:box-shadow .2s}
+  .card:hover{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+  .img{aspect-ratio:4/3;background:linear-gradient(135deg,#dfe6eb 0%,#c5d4e0 100%);display:flex;align-items:center;justify-content:center;font-size:48px}
+  .pad{padding:14px}
+  .pad h3{margin:0 0 4px 0;font-size:18px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .chip{background:#eef1f4;border:1px solid #e1e6ea;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:500}
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid #e7e7e7;color:var(--muted);font-size:14px;text-align:center}
+  @media (max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:640px){.menu{display:none}.grid{grid-template-columns:1fr}.navwrap{padding:14px 16px}.container{padding:16px}}
+ /* Header */
+  .navbar{position:sticky;top:0;background:#fff;border-bottom:1px solid #e7e7e7;z-index:5}
+  .navrow{max-width:1200px;margin:auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+  .brand{color:var(--primary);font-weight:800;font-size:20px}
+  .menu{display:flex;gap:16px;color:var(--muted)}
+  .menu a:hover{color:var(--primary)}
+  .btn{background:var(--primary);color:#fff;border:0;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px}
+  .btn.secondary{background:#eaeaea;color:#111}
+
+</style>
+</head>
+<body>
+  <header class="navbar" role="navigation">
+    <div class="navwrap container">
+      <a class="brand" href="index.html">🐾 AdoptaRD</a>
+      <nav class="menu" aria-label="Principal">
+        <a href="index.html">Inicio</a>
+        <a href="catalogo.html">Adopta</a>
+        <a href="refugio.html">Refugios</a>
+        <a href="donaciones.html">Donar</a>
+        <a href="panel-refugio.html">Panel Refugio</a>
+        <a href="panel-admin.html">Panel Admin</a>
+      </nav>
+      <!-- Botón lateral opcional: lo dejamos como “Ingresar” sin 'Registrarse' -->
+      <a class="btn btn-login" id="loginBtn" href="login.html">Ingresar</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Encuentra a tu nuevo compañero</h1>
+      <p class="muted">Busca por especie o provincia y empieza el proceso de adopción responsable.</p>
+      <div class="search" role="search">
+        <input id="q" type="search" placeholder="Nombre, especie…"/>
+        <select id="prov" aria-label="Provincia">
+          <option value="">Provincia</option>
+          <option>Santo Domingo</option>
+          <option>Santiago</option>
+          <option>La Vega</option>
+          <option>San Cristóbal</option>
+          <option>Puerto Plata</option>
+        </select>
+        <button class="btn" id="btnBuscar">Buscar</button>
+      </div>
+    </section>
+
+    <div class="section-title">
+      <h2>Animales destacados</h2>
+      <a class="btn light" href="catalogo.html">Ver todos</a>
+    </div>
+
+    <section class="grid" aria-label="Animales destacados">
+      <article class="card">
+        <div class="img" role="img" aria-label="Foto de Luna">🐕</div>
+        <div class="pad">
+          <h3>Luna</h3>
+          <div class="muted">Santo Domingo</div>
+          <div class="tags">
+            <span class="chip">Vacunado</span>
+            <span class="chip">Esterilizado</span>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:10px">
+            <a class="btn" href="ficha.html?id=luna">Ver ficha</a>
+            <a class="btn light" href="formulario.html?id=luna">Adoptar</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="img" role="img" aria-label="Foto de Milo">🐕</div>
+        <div class="pad">
+          <h3>Milo</h3>
+          <div class="muted">Santiago</div>
+          <div class="tags">
+            <span class="chip">Vacunado</span>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:10px">
+            <a class="btn" href="ficha.html?id=luna">Ver ficha</a>
+            <a class="btn light" href="formulario.html?id=milo">Adoptar</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="img" role="img" aria-label="Foto de Nina">🐈</div>
+        <div class="pad">
+          <h3>Nina</h3>
+          <div class="muted">La Vega</div>
+          <div class="tags">
+            <span class="chip">Esterilizado</span>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:10px">
+            <a class="btn" href="ficha.html?id=nina">Ver ficha</a>
+            <a class="btn light" href="formulario.html?id=nina">Adoptar</a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer>© 2025 AdoptaRD · Privacidad · Términos</footer>
+  </main>
+
+  <!-- scripts -->
+  <script src="auth.js"></script>
+  <script>
+    initAuthUI();
+
+    // Redirigir a catálogo con parámetros de búsqueda (demo)
+    document.getElementById('btnBuscar').addEventListener('click', ()=>{
+      const q = encodeURIComponent(document.getElementById('q').value || '');
+      const prov = encodeURIComponent(document.getElementById('prov').value || '');
+      const url = `catalogo.html?q=${q}&prov=${prov}`;
+      location.href = url;
+    });
+  </script>
+</body>
+</html>
